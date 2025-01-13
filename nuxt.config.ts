@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   ],
   app: {
     head: {
-      title: 'Nuxt Dojo',
+      title: 'EStore',
       meta: [
         {name: 'description', content: 'Everything about Nuxt 3'}
       ],

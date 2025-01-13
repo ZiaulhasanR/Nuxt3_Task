@@ -31,12 +31,10 @@
                   <div class="flex items-center justify-between my-4">
                     <p class="px-4 py-2 bg-blue-200 rounded-md text-xs text-blue-700 font-semibold">Up to 35% off</p>
                     <div class="flex gap-6 mr-8 text-slate-500 mt-auto">
-                      <span class="iconify i-mdi:eye-outline" aria-hidden="true" style="color: rgb(30, 144, 255);">
-                      </span>
+                      <Icon icon="mdi:eye" aria-hidden="true" style="color: rgb(30, 144, 255);" />
+                      
                       <button disabled class="disabled:cursor-not-allowed">
-                        <span class="iconify i-material-symbol:favorite-outline" aria-hidden="true"
-                          style="color: rgb(30, 144, 255);">
-                        </span>
+                        <Icon icon="mdi:favorite" aria-hidden="true" style="color: rgb(30, 144, 255);" />
                       </button>
                     </div>
                   </div>
@@ -83,6 +81,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { Icon } from "@iconify/vue";
 
 const products = ref([]);
 const isLoading = ref(false);
@@ -108,12 +107,12 @@ const addToCart = (product) => {
 
   const existingProduct = cart.find((item) => item.id === product.id);
   if (existingProduct) {
-    existingProduct.quantity += 1; 
+    existingProduct.quantity += 1;
   } else {
-    cart.push({ ...product, quantity: 1 }); 
+    cart.push({ ...product, quantity: 1 });
   }
 
- 
+
   window.localStorage.setItem("cart", JSON.stringify(cart));
   alert(`${product.title} added to the cart!`);
 };
