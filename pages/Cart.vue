@@ -95,7 +95,9 @@ const loadFavorites = () => {
     const storedFavorites = localStorage.getItem("favorites");
     favorites.value = storedFavorites ? JSON.parse(storedFavorites) : [];
 };
+//loadFavorites(favorites);
 
+//const {loadFavorites} = useUtils(); 
 const saveFavorites = () => {
     localStorage.setItem("favorites", JSON.stringify(favorites.value));
 };

@@ -19,12 +19,12 @@
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/Favorite_Products" class="hover:text-gray-900 transition-all">
+          <NuxtLink to="/favoriteproducts" class="hover:text-gray-900 transition-all">
             Favorite Products
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/Cart" class="hover:text-gray-900 transition-all">
+          <NuxtLink to="/cart" class="hover:text-gray-900 transition-all">
             Cart
           </NuxtLink>
         </li>
