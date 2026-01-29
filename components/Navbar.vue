@@ -14,6 +14,11 @@
       
       <ul class="hidden md:flex gap-6 ml-auto text-lg font-medium capitalize text-gray-600">
         <li>
+          <NuxtLink to="/scrolldesign" class="hover:text-gray-900 transition-all">
+            Design
+          </NuxtLink>
+        </li>
+        <li>
           <NuxtLink to="/chat" class="hover:text-gray-900 transition-all">
             Chat
           </NuxtLink>

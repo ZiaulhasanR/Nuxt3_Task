@@ -1,9 +1,13 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
 export default defineNuxtConfig({
   ssr: false,
+  compatibilityDate: '2024-11-01',
   modules: [
     '@nuxtjs/tailwindcss'
   ],
+  experimental: {
+    appManifest: false
+  },
   app: {
     head: {
       title: 'EStore',
@@ -16,3 +20,5 @@ export default defineNuxtConfig({
     }
   },
 })
+
+
