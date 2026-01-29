@@ -1,37 +1,37 @@
 const createRequest = async (url, method, body = null) => {
     const config = useRuntimeConfig();
-    const authStore = useAuthStore();
+    const { accessToken } = await import('./accessToken.js');
+    // const authStore = useAuthStore();
     const fbp = useCookie('_fbp');
     const fbc = useCookie('_fbc');
     const clickId = useCookie("click_id");
-    const { data, status, error, refresh, clear } = await useFetch(url, {
-        baseURL: config.public.baseURL,
-        method: method,
-        body,
-        onRequest({request, options}) {
-            options.headers.set('Authorization', `Bearer ${accessToken()}`)
-            options.headers.set('Accept', 'application/json')
-            options.headers.set('Content-Type', 'application/json')
-            options.headers.set('X-FBP', fbp.value || '');
-            options.headers.set('X-FBC', fbc.value || '');
-            options.headers.set('X-Click-ID', clickId.value || '');
-        },
-        onRequestError({}) {
-            // Handle the request errors
-        },
-        onResponse({}) {
-            // Handle the response object
-        },
-        async onResponseError({response}) {
-            // if (response?.status === 401) {
-            //     const router = useRouter();
-            //     await authStore.clearAuth()
-            //     await router.push('/login')
-            // }
-        }
-    });
+    
+    try {
+        const data = await $fetch(url, {
+            baseURL: config.public.baseURL,
+            method: method,
+            body,
+            headers: {
+                'Authorization': `Bearer ${accessToken()}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'X-FBP': fbp.value || '',
+                'X-FBC': fbc.value || '',
+                'X-Click-ID': clickId.value || ''
+            },
+            async onResponseError({response}) {
+                // if (response?.status === 401) {
+                //     const router = useRouter();
+                //     await authStore.clearAuth()
+                //     await router.push('/login')
+                // }
+            }
+        });
 
-    return {data, status, error, refresh, clear};
+        return { data, status: 'success', error: null };
+    } catch (error) {
+        return { data: null, status: 'error', error };
+    }
 }
 
 export const getData = async (url) => {

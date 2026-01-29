@@ -10,7 +10,7 @@
                 <h2 class="text-lg font-semibold text-center mt-2">{{ item.title }}</h2>
                 <p class="text-center text-gray-600">${{ item.price }}</p>
                 <div class="">
-                    <button @click="removeFromCart(index)"
+                    <button @click="removeFromFavorites(item.id)"
                         class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
                         Remove
                     </button>
@@ -22,12 +22,15 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { loadFavorites } from "~~/composables/favStore";
+import { loadFavorites, removeFavorite } from "~~/composables/favStore";
+
 const favorites = ref([]);
 
- favorites.value = loadFavorites(); 
-// loadFavorites(favorites);
 onMounted(() => {
-    loadFavorites();
+    favorites.value = loadFavorites();
 });
+
+const removeFromFavorites = (productId) => {
+    favorites.value = removeFavorite(productId);
+};
 </script>

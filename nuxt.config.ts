@@ -1,10 +1,10 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
+import {process} from "std-env";
+
 export default defineNuxtConfig({
-  ssr: false,
+  ssr: true,
   compatibilityDate: '2024-11-01',
-  modules: [
-    '@nuxtjs/tailwindcss'
-  ],
+  modules: ['@nuxt/icon', '@nuxt/image', '@pinia/nuxt', '@nuxtjs/tailwindcss'],
   experimental: {
     appManifest: false
   },
@@ -19,6 +19,12 @@ export default defineNuxtConfig({
       ]
     }
   },
+
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.BASE_URL || 'http://localhost:5000/api',
+    }
+  }
 })
 
 
