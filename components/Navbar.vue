@@ -54,7 +54,7 @@
         <!-- Registered but Not Logged In - Show Login -->
         <button
             v-if="authState === 'registered'"
-            @click="navigateTo('/login')"
+            @click="navigateTo('Auth/login')"
             class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all"
         >
           Login

@@ -1,17 +1,10 @@
 <template>
-  <div class="min-h-screen flex  p-4">
+  <div class="min-h-screen flex p-4">
     <!-- Main Container -->
     <div class="w-full max-w-7xl mx-auto bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 rounded-3xl shadow-2xl overflow-hidden flex">
 
       <!-- Left Side - Form -->
       <div class="w-full lg:w-1/2 p-12 flex flex-col justify-center relative">
-        <!-- Close Button -->
-<!--        <button class="absolute top-8 right-8 w-10 h-10 rounded-full bg-white/50 hover:bg-white/80 flex items-center justify-center transition-all">-->
-<!--          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">-->
-<!--            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />-->
-<!--          </svg>-->
-<!--        </button>-->
-
         <!-- Logo -->
         <div class="mb-12">
           <div class="inline-block px-6 py-2 bg-white rounded-full border-2 border-gray-300 shadow-sm">
@@ -21,22 +14,12 @@
 
         <!-- Heading -->
         <div class="mb-8">
-          <h1 class="text-4xl font-light text-gray-800 mb-2">Create an account</h1>
+          <h1 class="text-4xl font-light text-gray-800 mb-2">Welcome back</h1>
+          <p class="text-gray-600">Sign in to your account</p>
         </div>
 
         <!-- Form -->
         <form @submit.prevent="handleSubmit" class="space-y-6">
-          <!-- Full Name -->
-          <div>
-            <label class="block text-sm text-gray-600 mb-2">Full name</label>
-            <input
-                v-model="formData.name"
-                type="text"
-                placeholder="Enter Your Full Name"
-                class="w-full px-6 py-4 bg-white/60 backdrop-blur-sm rounded-2xl border-0 focus:ring-2 focus:ring-yellow-400 outline-none transition-all text-gray-800 placeholder-gray-400"
-            />
-          </div>
-
           <!-- Email -->
           <div>
             <label class="block text-sm text-gray-600 mb-2">Email</label>
@@ -74,13 +57,36 @@
             </div>
           </div>
 
+          <!-- Remember Me & Forgot Password -->
+          <div class="flex items-center justify-between">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input 
+                  v-model="rememberMe"
+                  type="checkbox" 
+                  class="w-4 h-4 rounded border-gray-300 text-yellow-400 focus:ring-yellow-400"
+              />
+              <span class="text-sm text-gray-600">Remember me</span>
+            </label>
+            <a href="#" class="text-sm text-gray-800 underline hover:text-gray-900">Forgot password?</a>
+          </div>
+
           <!-- Submit Button -->
           <button
               type="submit"
               class="w-full py-4 bg-gradient-to-r from-yellow-300 to-yellow-400 text-gray-800 font-medium rounded-2xl hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
-            Submit
+            Sign In
           </button>
+
+          <!-- Divider -->
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-4 bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 text-gray-500">Or continue with</span>
+            </div>
+          </div>
 
           <!-- Social Login -->
           <div class="flex gap-4">
@@ -111,7 +117,7 @@
         <!-- Footer -->
         <div class="mt-8 flex justify-between text-sm">
           <p class="text-gray-600">
-            Have any account? <a href="/Auth/login" class="text-gray-800 underline hover:text-gray-900">Sing in</a>
+            Don't have an account? <a href="/Auth/signup" class="text-gray-800 underline hover:text-gray-900">Sign up</a>
           </p>
           <a href="#" class="text-gray-600 underline hover:text-gray-800">Terms & Conditions</a>
         </div>
@@ -202,36 +208,36 @@ definePageMeta({
 })
 
 const formData = ref({
-  name: '',
   email: '',
   password: ''
 })
 
 const showPassword = ref(false)
+const rememberMe = ref(false)
 
 const handleSubmit = async () => {
-  console.log('Submitting form with data:', formData.value)
+  console.log('Submitting login with data:', formData.value)
   
   try {
-    const { data, status, error } = await postData("/auth/register", formData.value)
+    const { data, status, error } = await postData("/auth/login", formData.value)
     
     console.log('Response status:', status)
     console.log('Response data:', data)
     console.log('Response error:', error)
     
     if (error) {
-      console.error('Registration error:', error)
+      console.error('Login error:', error)
     } else {
-      console.log('Registration successful:', data)
-      // Store the token if registration is successful
+      console.log('Login successful:', data)
+      // Store the token if login is successful
       // if (data?.token) {
       //   localStorage.setItem('token', data.token)
       //   console.log('Token stored successfully')
       // }
-      await router.push('/Auth/login')
+      await navigateTo('/')
     }
   } catch (err) {
-    console.error('Caught error during registration:', err)
+    console.error('Caught error during login:', err)
   }
 }
 </script>
