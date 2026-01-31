@@ -228,7 +228,7 @@ const handleSubmit = async () => {
       //   localStorage.setItem('token', data.token)
       //   console.log('Token stored successfully')
       // }
-      await router.push('/Auth/login')
+      await navigateTo('/Auth/login')
     }
   } catch (err) {
     console.error('Caught error during registration:', err)

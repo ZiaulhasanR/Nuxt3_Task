@@ -57,6 +57,11 @@
             </div>
           </div>
 
+          <!-- Error Message -->
+          <div v-if="errorMessage" class="p-4 bg-red-50 border border-red-200 rounded-xl">
+            <p class="text-sm text-red-600">{{ errorMessage }}</p>
+          </div>
+
           <!-- Remember Me & Forgot Password -->
           <div class="flex items-center justify-between">
             <label class="flex items-center gap-2 cursor-pointer">
@@ -73,9 +78,10 @@
           <!-- Submit Button -->
           <button
               type="submit"
-              class="w-full py-4 bg-gradient-to-r from-yellow-300 to-yellow-400 text-gray-800 font-medium rounded-2xl hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              :disabled="isSubmitting"
+              class="w-full py-4 bg-gradient-to-r from-yellow-300 to-yellow-400 text-gray-800 font-medium rounded-2xl hover:from-yellow-400 hover:to-yellow-500 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            Sign In
+            {{ isSubmitting ? 'Signing In...' : 'Sign In' }}
           </button>
 
           <!-- Divider -->
@@ -201,7 +207,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { postData } from '~/composables/useRequest'
+import { useAuth } from '~/composables/useAuth'
 
 definePageMeta({
   layout: 'none-layout'
@@ -214,30 +220,32 @@ const formData = ref({
 
 const showPassword = ref(false)
 const rememberMe = ref(false)
+const errorMessage = ref('')
+const isSubmitting = ref(false)
+
+const { login } = useAuth()
 
 const handleSubmit = async () => {
   console.log('Submitting login with data:', formData.value)
+  errorMessage.value = ''
+  isSubmitting.value = true
   
   try {
-    const { data, status, error } = await postData("/auth/login", formData.value)
+    const result = await login(formData.value)
     
-    console.log('Response status:', status)
-    console.log('Response data:', data)
-    console.log('Response error:', error)
-    
-    if (error) {
-      console.error('Login error:', error)
-    } else {
-      console.log('Login successful:', data)
-      // Store the token if login is successful
-      // if (data?.token) {
-      //   localStorage.setItem('token', data.token)
-      //   console.log('Token stored successfully')
-      // }
+    if (result.success) {
+      console.log('Login successful:', result.user)
+      // Redirect to home page
       await navigateTo('/')
+    } else {
+      console.error('Login error:', result.error)
+      errorMessage.value = result.error?.data?.message || 'Login failed. Please check your credentials.'
     }
   } catch (err) {
     console.error('Caught error during login:', err)
+    errorMessage.value = 'An unexpected error occurred. Please try again.'
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>

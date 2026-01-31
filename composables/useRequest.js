@@ -1,30 +1,28 @@
 const createRequest = async (url, method, body = null) => {
     const config = useRuntimeConfig();
-    const { accessToken } = await import('./accessToken.js');
-    // const authStore = useAuthStore();
     const fbp = useCookie('_fbp');
     const fbc = useCookie('_fbc');
     const clickId = useCookie("click_id");
-    
+
     try {
         const data = await $fetch(url, {
             baseURL: config.public.baseURL,
             method: method,
             body,
+            credentials: 'include', // Include cookies in requests
             headers: {
-                'Authorization': `Bearer ${accessToken()}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'X-FBP': fbp.value || '',
                 'X-FBC': fbc.value || '',
                 'X-Click-ID': clickId.value || ''
             },
-            async onResponseError({response}) {
-                // if (response?.status === 401) {
-                //     const router = useRouter();
-                //     await authStore.clearAuth()
-                //     await router.push('/login')
-                // }
+            async onResponseError({ response }) {
+                if (response?.status === 401) {
+                    // Token expired or invalid, redirect to login
+                    const router = useRouter();
+                    await router.push('/Auth/login')
+                }
             }
         });
 
