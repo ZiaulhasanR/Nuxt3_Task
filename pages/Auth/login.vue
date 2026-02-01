@@ -201,11 +201,13 @@
 
 <script setup>
 import { ref } from 'vue'
-import { postData } from '~/composables/useRequest'
+import { useAuth } from '~/composables/useAuth'
 
 definePageMeta({
   layout: 'none-layout'
 })
+
+const { login } = useAuth()
 
 const formData = ref({
   email: '',
@@ -214,30 +216,34 @@ const formData = ref({
 
 const showPassword = ref(false)
 const rememberMe = ref(false)
+const isLoading = ref(false)
+const errorMessage = ref('')
 
 const handleSubmit = async () => {
   console.log('Submitting login with data:', formData.value)
   
+  // Reset error message
+  errorMessage.value = ''
+  isLoading.value = true
+  
   try {
-    const { data, status, error } = await postData("/auth/login", formData.value)
+    const { success, user, error } = await login(formData.value)
     
-    console.log('Response status:', status)
-    console.log('Response data:', data)
-    console.log('Response error:', error)
-    
-    if (error) {
-      console.error('Login error:', error)
-    } else {
-      console.log('Login successful:', data)
-      // Store the token if login is successful
-      // if (data?.token) {
-      //   localStorage.setItem('token', data.token)
-      //   console.log('Token stored successfully')
-      // }
+    if (success) {
+      console.log('Login successful:', user)
+      alert('Login successful! Welcome back!')
       await navigateTo('/')
+    } else {
+      console.error('Login failed:', error)
+      errorMessage.value = error?.data?.message || error?.message || 'Invalid email or password'
+      alert(errorMessage.value)
     }
   } catch (err) {
     console.error('Caught error during login:', err)
+    errorMessage.value = 'An unexpected error occurred. Please try again.'
+    alert(errorMessage.value)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>

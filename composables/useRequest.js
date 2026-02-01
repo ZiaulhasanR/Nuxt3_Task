@@ -1,6 +1,5 @@
 const createRequest = async (url, method, body = null) => {
     const config = useRuntimeConfig();
-    const { accessToken } = await import('./accessToken.js');
     // const authStore = useAuthStore();
     const fbp = useCookie('_fbp');
     const fbc = useCookie('_fbc');
@@ -11,8 +10,9 @@ const createRequest = async (url, method, body = null) => {
             baseURL: config.public.baseURL,
             method: method,
             body,
+            credentials: 'include', // Required for cookie-based authentication
             headers: {
-                'Authorization': `Bearer ${accessToken()}`,
+                // Authorization header removed - using httpOnly cookies instead
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'X-FBP': fbp.value || '',

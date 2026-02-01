@@ -195,11 +195,14 @@
 
 <script setup>
 import { ref } from 'vue'
-import { postData } from '~/composables/useRequest'
+import { useAuth } from '~/composables/useAuth'
 
 definePageMeta({
   layout: 'none-layout'
 })
+
+const { register } = useAuth()
+const router = useRouter()
 
 const formData = ref({
   name: '',
@@ -208,30 +211,34 @@ const formData = ref({
 })
 
 const showPassword = ref(false)
+const isLoading = ref(false)
+const errorMessage = ref('')
 
 const handleSubmit = async () => {
   console.log('Submitting form with data:', formData.value)
   
+  // Reset error message
+  errorMessage.value = ''
+  isLoading.value = true
+  
   try {
-    const { data, status, error } = await postData("/auth/register", formData.value)
+    const { success, user, error } = await register(formData.value)
     
-    console.log('Response status:', status)
-    console.log('Response data:', data)
-    console.log('Response error:', error)
-    
-    if (error) {
-      console.error('Registration error:', error)
-    } else {
-      console.log('Registration successful:', data)
-      // Store the token if registration is successful
-      // if (data?.token) {
-      //   localStorage.setItem('token', data.token)
-      //   console.log('Token stored successfully')
-      // }
+    if (success) {
+      console.log('Registration successful:', user)
+      alert('Registration successful! Redirecting to login...')
       await router.push('/Auth/login')
+    } else {
+      console.error('Registration failed:', error)
+      errorMessage.value = error?.data?.message || error?.message || 'Registration failed. Please try again.'
+      alert(errorMessage.value)
     }
   } catch (err) {
     console.error('Caught error during registration:', err)
+    errorMessage.value = 'An unexpected error occurred. Please try again.'
+    alert(errorMessage.value)
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
